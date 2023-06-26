@@ -64,6 +64,8 @@ CFLAGS                :=    -ggdb3
 LDFLAGS               :=    -ggdb3 -pthread
 CPPFLAGS              :=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 CPPFLAGS              +=    -D_WINDOWS_
+# HACK: For some reason this isn't defined on Kali ARM64 ~ol
+CPPFLAGS	            +=    -DPTHREAD_STACK_MIN=16384
 
 ifeq ($(TRACE_ON_ENTER),1)
   CPPFLAGS              += -DTRACE_ON_ENTER=1
