@@ -34,6 +34,7 @@
  */
 static void prvQueueReceiveTask( void * pvParameters );
 static void prvQueueSendTask( void * pvParameters );
+static void prvHeapTask( void * pvParameters );
 
 /*
  * The callback function executed when the software timer expires.
@@ -55,36 +56,46 @@ void main_heap( void )
     const TickType_t xTimerPeriod = mainTIMER_SEND_FREQUENCY_MS;
 
     /* Create the queue. */
-    xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
+    // xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
 
-    if( xQueue != NULL )
-    {
-        /* Start the two tasks as described in the comments at the top of this
-         * file. */
-        xTaskCreate( prvQueueReceiveTask,             /* The function that implements the task. */
-                     "Rx",                            /* The text name assigned to the task - for debug only as it is not used by the kernel. */
-                     configMINIMAL_STACK_SIZE,        /* The size of the stack to allocate to the task. */
-                     NULL,                            /* The parameter passed to the task - not used in this simple case. */
-                     mainQUEUE_RECEIVE_TASK_PRIORITY, /* The priority assigned to the task. */
-                     NULL );                          /* The task handle is not required, so NULL is passed. */
+    // if( xQueue != NULL )
+    // {
+    //     /* Start the two tasks as described in the comments at the top of this
+    //      * file. */
+    //     xTaskCreate( prvQueueReceiveTask,             /* The function that implements the task. */
+    //                  "Rx",                            /* The text name assigned to the task - for debug only as it is not used by the kernel. */
+    //                  configMINIMAL_STACK_SIZE,        /* The size of the stack to allocate to the task. */
+    //                  NULL,                            /* The parameter passed to the task - not used in this simple case. */
+    //                  mainQUEUE_RECEIVE_TASK_PRIORITY, /* The priority assigned to the task. */
+    //                  NULL );                          /* The task handle is not required, so NULL is passed. */
 
-        xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+    //     xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
-        /* Create the software timer, but don't start it yet. */
-        xTimer = xTimerCreate( "Timer",                     /* The text name assigned to the software timer - for debug only as it is not used by the kernel. */
-                               xTimerPeriod,                /* The period of the software timer in ticks. */
-                               pdTRUE,                      /* xAutoReload is set to pdTRUE. */
-                               NULL,                        /* The timer's ID is not used. */
-                               prvQueueSendTimerCallback ); /* The function executed when the timer expires. */
+    //     /* Create the software timer, but don't start it yet. */
+    //     xTimer = xTimerCreate( "Timer",                     /* The text name assigned to the software timer - for debug only as it is not used by the kernel. */
+    //                            xTimerPeriod,                /* The period of the software timer in ticks. */
+    //                            pdTRUE,                      /* xAutoReload is set to pdTRUE. */
+    //                            NULL,                        /* The timer's ID is not used. */
+    //                            prvQueueSendTimerCallback ); /* The function executed when the timer expires. */
 
-        if( xTimer != NULL )
-        {
-            xTimerStart( xTimer, 0 );
-        }
+    //     if( xTimer != NULL )
+    //     {
+    //         xTimerStart( xTimer, 0 );
+    //     }
 
-        /* Start the tasks and timer running. */
-        vTaskStartScheduler();
-    }
+    //     // Create heap task
+    //     xTaskCreate( prvHeapTask, "Heap", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+
+
+    //     /* Start the tasks and timer running. */
+    //     vTaskStartScheduler();
+    // }
+    // Create heap task
+    xTaskCreate( prvHeapTask, "Heap", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+
+
+    /* Start the tasks and timer running. */
+    vTaskStartScheduler();
 
     /* If all is well, the scheduler will now be running, and the following
      * line will never be reached.  If the following line does execute, then
@@ -96,6 +107,31 @@ void main_heap( void )
     }
 }
 /*-----------------------------------------------------------*/
+
+static void prvDumpHeap() {
+    HeapStats_t HeapStats;
+    vPortGetHeapStats( &HeapStats );
+
+    console_print( "\n=========== HEAP DUMP =========\n");
+    console_print( "xAvailableHeapSpaceInBytes: 0x%zx\n", HeapStats.xAvailableHeapSpaceInBytes );
+    console_print( "xSizeOfLargestFreeBlockInBytes: 0x%zx\n", HeapStats.xSizeOfLargestFreeBlockInBytes );
+    console_print( "xSizeOfSmallestFreeBlockInBytes: 0x%zx\n", HeapStats.xSizeOfSmallestFreeBlockInBytes );
+    console_print( "xNumberOfFreeBlocks: %zu\n", HeapStats.xNumberOfFreeBlocks );
+    console_print( "xMinimumEverFreeBytesRemaining: 0x%zx\n", HeapStats.xMinimumEverFreeBytesRemaining );
+    console_print( "xNumberOfSuccessfulAllocations: %zu\n", HeapStats.xNumberOfSuccessfulAllocations );
+    console_print( "xNumberOfSuccessfulFrees: %zu\n", HeapStats.xNumberOfSuccessfulFrees );
+    console_print( "\n----- Free-list -----\n");
+    vPortDumpHeap(&console_print);
+}
+
+static void prvHeapTask( void * pvParameters )
+{
+    char* foo;
+    prvDumpHeap();
+    foo = pvPortMalloc(64);
+    prvDumpHeap();
+    vTaskDelete(NULL);
+}
 
 static void prvQueueSendTask( void * pvParameters )
 {

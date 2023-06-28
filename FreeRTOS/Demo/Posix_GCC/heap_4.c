@@ -552,4 +552,28 @@ void vPortGetHeapStats( HeapStats_t * pxHeapStats )
     }
     taskEXIT_CRITICAL();
 }
+
+void vPortDumpHeap( void (*dump_print)( const char *, ... ) ) {
+    BlockLink_t * pxBlock;
+
+// We can't call console_print while the scheduler is suspended, so live dangerously
+//    vTaskSuspendAll();
+    {
+        pxBlock = xStart.pxNextFreeBlock;
+        dump_print("Block @%p\n\pxNextFreeBlock: %p\n\txblockSize: 0x%x\n\n", pxBlock, pxBlock->pxNextFreeBlock, pxBlock->xBlockSize);
+        /* pxBlock will be NULL if the heap has not been initialised.  The heap
+         * is initialised automatically when the first allocation is made. */
+        if( pxBlock != NULL )
+        {
+            while( pxBlock != pxEnd )
+            {
+                dump_print("Block @%p\n\pxNextFreeBlock: %p\n\txblockSize: 0x%x\n\n", pxBlock, pxBlock->pxNextFreeBlock, pxBlock->xBlockSize);
+                pxBlock = pxBlock->pxNextFreeBlock;
+            }
+        }
+    }
+//    ( void ) xTaskResumeAll();
+}
+
+
 /*-----------------------------------------------------------*/
