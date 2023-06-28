@@ -74,6 +74,7 @@
 
 #define    BLINKY_DEMO    0
 #define    FULL_DEMO      1
+#define    HEAP_DEMO      2
 
 #ifdef BUILD_DIR
     #define BUILD         BUILD_DIR
@@ -82,9 +83,11 @@
 #endif
 
 /* Demo type is passed as an argument */
-#ifdef USER_DEMO
+#if defined(USER_DEMO)
     #define     mainSELECTED_APPLICATION    USER_DEMO
-#else /* Default Setting */
+#elif defined(HEAP_DEMO)
+    #define     mainSELECTED_APPLICATION    HEAP_DEMO
+#else/* Default Setting */
     #define    mainSELECTED_APPLICATION     FULL_DEMO
 #endif
 
@@ -93,6 +96,7 @@
 /*-----------------------------------------------------------*/
 extern void main_blinky( void );
 extern void main_full( void );
+extern void main_heap( void );
 static void traceOnEnter( void );
 
 /*
@@ -182,6 +186,11 @@ int main( void )
         {
             console_print( "Starting full demo\n" );
             main_full();
+        }
+    #elif ( mainSELECTED_APPLICATION == HEAP_DEMO )
+        {
+            console_print( "Starting heap harness demo\n" );
+            main_heap();
         }
     #else
         {
