@@ -67,6 +67,7 @@ add_executable( posix_demo
                 console.c
                 main.c
                 main_blinky.c
+                main_heap.c
                 main_full.c
                 run-time-stats-utils.c
                 $<$<NOT:${COVERAGE_TEST}>:${FREERTOS_PLUS_TRACE_SOURCES}>

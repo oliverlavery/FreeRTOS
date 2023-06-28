@@ -64,12 +64,8 @@ CFLAGS                :=    -ggdb3
 LDFLAGS               :=    -ggdb3 -pthread
 CPPFLAGS              :=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 CPPFLAGS              +=    -D_WINDOWS_
-<<<<<<< HEAD
-CPPFLAGS              +=    -DPTHREAD_STACK_MIN=16384
-=======
 # HACK: For some reason this isn't defined on Kali ARM64 ~ol
 CPPFLAGS	            +=    -DPTHREAD_STACK_MIN=16384
->>>>>>> 654a7c002 (Fix missing PTHREAD_STACK_MIN on arm64 kali.)
 
 ifeq ($(TRACE_ON_ENTER),1)
   CPPFLAGS              += -DTRACE_ON_ENTER=1
@@ -112,6 +108,9 @@ ifeq ($(USER_DEMO),FULL_DEMO)
   CPPFLAGS            +=   -DUSER_DEMO=1
 endif
 
+ifeq ($(USER_DEMO),HEAP_DEMO)
+  CPPFLAGS            +=   -DUSER_DEMO=2
+endif
 
 OBJ_FILES = $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 
