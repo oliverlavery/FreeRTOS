@@ -12,8 +12,8 @@
 
 #define mainHEAP_SEND_TASK_PRIORITY       ( tskIDLE_PRIORITY + 1 )
 
-#define P1_ALLOC_SIZE   16
-#define P2_ALLOC_SIZE   16
+#define P1_ALLOC_SIZE   16                  /* Size of vulnerable allocation */
+#define P2_ALLOC_SIZE   16                  /* Size of attacker controlled allocation */
 
 typedef struct TARGET_BLOCK_LINK
 {
