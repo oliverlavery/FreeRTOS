@@ -135,7 +135,7 @@ PRIVILEGED_DATA static size_t xNumberOfSuccessfulFrees = 0;
 
 /*-----------------------------------------------------------*/
 
-void * pvPortMalloc( size_t xWantedSize )
+void * __real_pvPortMalloc( size_t xWantedSize )
 {
     BlockLink_t * pxBlock;
     BlockLink_t * pxPreviousBlock;
@@ -304,7 +304,7 @@ void * pvPortMalloc( size_t xWantedSize )
 }
 /*-----------------------------------------------------------*/
 
-void vPortFree( void * pv )
+void __real_vPortFree( void * pv )
 {
     uint8_t * puc = ( uint8_t * ) pv;
     BlockLink_t * pxLink;
@@ -566,7 +566,7 @@ void vPortDumpHeap( void (*dump_print)( const char *, ... ) ) {
         {
             while( pxBlock && pxBlock != pxEnd )
             {
-                dump_print("Block @%p\n\pxNextFreeBlock: %p\n\txblockSize: 0x%x\n\n", pxBlock, pxBlock->pxNextFreeBlock, pxBlock->xBlockSize);
+                dump_print("Block @%p\npxNextFreeBlock: %p\n\txblockSize: 0x%x\n\n", pxBlock, pxBlock->pxNextFreeBlock, pxBlock->xBlockSize);
                 pxBlock = pxBlock->pxNextFreeBlock;
             }
         }

