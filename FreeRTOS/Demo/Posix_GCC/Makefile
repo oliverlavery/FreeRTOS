@@ -61,7 +61,7 @@ SOURCE_FILES          += ${FREERTOS_DIR}/Demo/Common/Minimal/TimerDemo.c
 
 
 CFLAGS                :=    -ggdb3
-LDFLAGS               :=    -ggdb3 -pthread
+LDFLAGS               :=    -ggdb3 -pthread -no-pie
 CPPFLAGS              :=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 CPPFLAGS              +=    -D_WINDOWS_
 # HACK: For some reason this isn't defined on Kali ARM64 ~ol
