@@ -26,7 +26,7 @@ INCLUDE_DIRS          += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/strea
 SOURCE_FILES          := $(wildcard *.c)
 SOURCE_FILES          += $(wildcard ${FREERTOS_DIR}/Source/*.c)
 # Memory manager (use malloc() / free() )
-SOURCE_FILES          += ${KERNEL_DIR}/portable/MemMang/heap_3.c
+SOURCE_FILES          += ${KERNEL_DIR}/portable/MemMang/heap_4s.c
 # posix port
 SOURCE_FILES          += ${KERNEL_DIR}/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c
 SOURCE_FILES          += ${KERNEL_DIR}/portable/ThirdParty/GCC/Posix/port.c
@@ -64,6 +64,7 @@ CFLAGS                :=    -ggdb3
 LDFLAGS               :=    -ggdb3 -pthread
 CPPFLAGS              :=    $(INCLUDE_DIRS) -DBUILD_DIR=\"$(BUILD_DIR_ABS)\"
 CPPFLAGS              +=    -D_WINDOWS_
+CPPFLAGS              +=    -DPTHREAD_STACK_MIN=16384
 
 ifeq ($(TRACE_ON_ENTER),1)
   CPPFLAGS              += -DTRACE_ON_ENTER=1

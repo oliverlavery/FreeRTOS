@@ -130,6 +130,8 @@ static void prvSaveTraceFile( void );
  */
 static void handle_sigint( int signal );
 
+static void prvSRand( UBaseType_t ulSeed );
+
 /*-----------------------------------------------------------*/
 
 /* When configSUPPORT_STATIC_ALLOCATION is set to 1 the application writer can
@@ -152,6 +154,7 @@ static clockid_t cid = CLOCK_THREAD_CPUTIME_ID;
 
 int main( void )
 {
+    prvSRand(0x55*2);
     /* SIGINT is not blocked by the posix port */
     signal( SIGINT, handle_sigint );
 
@@ -460,4 +463,34 @@ uint32_t uiTraceTimerGetFrequency( void )
 uint32_t uiTraceTimerGetValue( void )
 {
     return( xTaskGetTickCount() - ulEntryTime );
+}
+
+/*-----------------------------------------------------------*/
+/* Use by the pseudo random number generator. */
+static UBaseType_t ulNextRand;
+
+UBaseType_t uxRand( void )
+{
+    const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
+
+    /* Utility function to generate a pseudo random number. */
+
+    ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;
+    return( ( int ) ( ulNextRand >> 16UL ) & 0x7fffUL );
+}
+
+static void prvSRand( UBaseType_t ulSeed )
+{
+    /* Utility function to seed the pseudo random number generator. */
+    ulNextRand = ulSeed;
+}
+/*
+ * Supply a random number to FreeRTOS+TCP stack.
+ * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER
+ * SO IS NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.
+ */
+BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber )
+{
+    *( pulNumber ) = uxRand();
+    return pdTRUE;
 }
