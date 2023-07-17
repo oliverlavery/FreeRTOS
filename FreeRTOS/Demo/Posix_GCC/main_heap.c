@@ -56,19 +56,19 @@ void main_heap( void )
 /*-----------------------------------------------------------*/
 
 static void prvDumpHeap() {
-    // HeapStats_t HeapStats;
-//    vPortGetHeapStats( &HeapStats );
+    HeapStats_t HeapStats;
+    vPortGetHeapStats( &HeapStats );
 
     console_print( "\n=========== HEAP DUMP =========\n");
-    // console_print( "xAvailableHeapSpaceInBytes: 0x%zx\n", HeapStats.xAvailableHeapSpaceInBytes );
-    // console_print( "xSizeOfLargestFreeBlockInBytes: 0x%zx\n", HeapStats.xSizeOfLargestFreeBlockInBytes );
-    // console_print( "xSizeOfSmallestFreeBlockInBytes: 0x%zx\n", HeapStats.xSizeOfSmallestFreeBlockInBytes );
-    // console_print( "xNumberOfFreeBlocks: %zu\n", HeapStats.xNumberOfFreeBlocks );
-    // console_print( "xMinimumEverFreeBytesRemaining: 0x%zx\n", HeapStats.xMinimumEverFreeBytesRemaining );
-    // console_print( "xNumberOfSuccessfulAllocations: %zu\n", HeapStats.xNumberOfSuccessfulAllocations );
-    // console_print( "xNumberOfSuccessfulFrees: %zu\n", HeapStats.xNumberOfSuccessfulFrees );
-    // console_print( "\n----- Free-list -----\n");
-    vPortDumpHeap(&console_print);
+    console_print( "xAvailableHeapSpaceInBytes: 0x%zx\n", HeapStats.xAvailableHeapSpaceInBytes );
+    console_print( "xSizeOfLargestFreeBlockInBytes: 0x%zx\n", HeapStats.xSizeOfLargestFreeBlockInBytes );
+    console_print( "xSizeOfSmallestFreeBlockInBytes: 0x%zx\n", HeapStats.xSizeOfSmallestFreeBlockInBytes );
+    console_print( "xNumberOfFreeBlocks: %zu\n", HeapStats.xNumberOfFreeBlocks );
+    console_print( "xMinimumEverFreeBytesRemaining: 0x%zx\n", HeapStats.xMinimumEverFreeBytesRemaining );
+    console_print( "xNumberOfSuccessfulAllocations: %zu\n", HeapStats.xNumberOfSuccessfulAllocations );
+    console_print( "xNumberOfSuccessfulFrees: %zu\n", HeapStats.xNumberOfSuccessfulFrees );
+    console_print( "\n----- Free-list -----\n");
+//    vPortDumpHeap(&console_print);
     console_print( "\n");
 }
 
