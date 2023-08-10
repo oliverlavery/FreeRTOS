@@ -45,7 +45,7 @@
 #define configTICK_RATE_HZ                         ( 1000 )                  /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configMINIMAL_STACK_SIZE                   ( ( unsigned short ) PTHREAD_STACK_MIN ) /* The stack size being passed is equal to the minimum stack size needed by pthread_create(). */
 #define configTOTAL_HEAP_SIZE                      ( ( size_t ) ( 64 * 1024 * 256 ) )
-#define configENABLE_HEAP_PROTECTOR                0
+#define configENABLE_HEAP_PROTECTOR                1
 #define configMAX_TASK_NAME_LEN                    ( 12 )
 #define configUSE_TRACE_FACILITY                   1
 #define configUSE_16_BIT_TICKS                     0

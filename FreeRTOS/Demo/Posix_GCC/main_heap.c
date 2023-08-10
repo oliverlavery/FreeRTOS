@@ -35,8 +35,34 @@ static void prvHeapTask( void * pvParameters );
 
 /*-----------------------------------------------------------*/
 
+static void prvInitializeHeap( void )
+{
+	/* Place the first block of the heap memory in the first bank of RAM. */
+    static struct ordered_heaps
+    {
+        uint8_t ucHeap1[ configTOTAL_HEAP_SIZE ];
+
+        /* Place the second block of the heap memory in the second bank of RAM. */
+        uint8_t ucHeap2[ 16 * 1024 ];
+    } xHeaps;
+
+	/* Memory regions are defined in address order, and terminate with NULL. */
+	static HeapRegion_t xHeapRegions[] =
+	{
+		{ ( unsigned char * ) xHeaps.ucHeap1, sizeof( xHeaps.ucHeap1 ) },
+		{ ( unsigned char * ) xHeaps.ucHeap2, sizeof( xHeaps.ucHeap2 ) },
+		{ NULL,                        0                 }
+	};
+
+	vPortDefineHeapRegions( xHeapRegions );
+
+	return;
+}
+
 void main_heap( void )
 {
+    /* Initialize heap_5 */
+    prvInitializeHeap();
     // Create heap task
     xTaskCreate( prvHeapTask, "Heap", configMINIMAL_STACK_SIZE, NULL, mainHEAP_SEND_TASK_PRIORITY, NULL );
 
