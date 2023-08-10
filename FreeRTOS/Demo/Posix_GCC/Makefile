@@ -26,7 +26,7 @@ INCLUDE_DIRS          += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/strea
 SOURCE_FILES          := $(wildcard *.c)
 SOURCE_FILES          += $(wildcard ${FREERTOS_DIR}/Source/*.c)
 # Memory manager (use malloc() / free() )
-SOURCE_FILES          += ${KERNEL_DIR}/portable/MemMang/heap_4.c
+SOURCE_FILES          += ${KERNEL_DIR}/portable/MemMang/heap_5.c
 # posix port
 SOURCE_FILES          += ${KERNEL_DIR}/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c
 SOURCE_FILES          += ${KERNEL_DIR}/portable/ThirdParty/GCC/Posix/port.c
