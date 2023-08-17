@@ -498,8 +498,9 @@ static void prvSRand( UBaseType_t ulSeed )
  * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER
  * SO IS NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.
  */
-BaseType_t xApplicationGetRandomNumber( uint32_t * pulNumber )
+BaseType_t xApplicationGetRandomHeapCanary( portPOINTER_SIZE_TYPE * pxRandomNumber )
 {
-    *( pulNumber ) = uxRand();
+    *( pxRandomNumber ) = uxRand();
+    *( pxRandomNumber ) = ( *( pxRandomNumber ) << 32 ) | uxRand();
     return pdTRUE;
 }
